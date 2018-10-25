@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-prod
+spec:
+  selector:
+    matchLabels:
+      app: frontend  
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: prod
+    spec:
+      containers:
+      - name: frontend
+        image: vinodsanthanam/api:v6
+        imagePullPolicy: Never
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        ports:
+          - containerPort: 80
+        env:
+          - name: api_port
+            value: "8080"
+          - name: SERVICE_NAME
+            value: "frontend-prod"
+          - name: UPSTREAM_URI
+            value: "http://middleware/"
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: middleware-prod
+spec:
+  selector:
+    matchLabels:
+      app: middleware  
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: middleware
+        version: prod
+    spec:
+      containers:
+      - name: middleware
+        image: vinodsanthanam/api:v6
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 80
+        env:
+          - name: api_port
+            value: "8080"
+          - name: SERVICE_NAME
+            value: "middleware-prod"
+          - name: UPSTREAM_URI
+            value: "http://backend/"
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-prod
+spec:
+  selector:
+    matchLabels:
+      app: backend  
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+        version: prod
+    spec:
+      containers:
+      - name: backend
+        image: vinodsanthanam/api:v6
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 80
+        env:
+          - name: api_port
+            value: "8080"
+          - name: SERVICE_NAME
+            value: "backend-prod"
+          - name: UPSTREAM_URI
+            value: "http://worldclockapi.com/api/json/utc/now"
+      imagePullSecrets:
+      - name: regcred

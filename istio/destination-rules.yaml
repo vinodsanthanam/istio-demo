@@ -1,0 +1,32 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: frontend
+spec:
+  host: frontend
+  subsets:
+  - name: prod
+    labels:
+      version: prod
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: middleware
+spec:
+  host: middleware
+  subsets:
+  - name: prod
+    labels:
+      version: prod
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: backend
+spec:
+  host: backend
+  subsets:
+  - name: prod
+    labels:
+      version: prod

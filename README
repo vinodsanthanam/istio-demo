@@ -1,1 +1,41 @@
-Read Me File
+View Istio log
+------------------------
+kubectl -n istio-system logs $(kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}') -c mixer
+
+Troubleshooting guide for Istio
+------------------------
+https://istio.io/help/ops/
+
+open telemetry endpoint
+------------------------
+http://localhost:9093/metrics
+
+open grafana endpoint
+------------------------
+http://localhost:9092/d/1/istio-mesh-dashboard?refresh=5s&orgId=1
+
+open prometheus endpoint
+------------------------
+http://localhost:9090/graph?g0.range_input=1h&g0.expr=grpc_server_handled_total&g0.tab=1
+
+target - http://localhost:9090/targets
+config - http://localhost:9090/config
+
+open jaeger dashboard
+------------------------
+http://localhost:16686
+
+open service graph endpoint
+------------------------
+http://localhost:8088/dotgraph
+http://localhost:8088/force/forcegraph.html
+
+Remove Istio
+------------------------
+kubectl delete -f install/kubernetes/istio-demo-auth.yaml
+kubectl delete -f install/kubernetes/helm/istio/templates/crds.yaml -n istio-system
+
+Install Istio
+------------------------
+kubectl apply -f install/kubernetes/helm/istio/templates/crds.yaml
+kubectl apply -f install/kubernetes/istio-demo-auth.yaml

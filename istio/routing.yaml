@@ -1,0 +1,55 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: frontend 
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - api-ingress-gateway
+  http:
+  - match:
+    - uri:
+        exact: /
+    - uri:
+        exact: /health
+    - uri:
+        exact: /health/toggle
+    route:
+    - destination:
+        host: frontend
+        port:
+          number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: middleware
+spec:
+  hosts:
+  - middleware
+  http:
+  - match:
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: middleware
+        subset: prod
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: backend
+spec:
+  hosts:
+  - backend
+  http:
+  - match:
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: backend
+        subset: prod
+---

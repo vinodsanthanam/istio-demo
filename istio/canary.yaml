@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: middleware-canary
+spec:
+  selector:
+    matchLabels:
+      app: middleware
+      version: canary  
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: middleware
+        version: canary
+    spec:
+      containers:
+      - name: middleware
+        image: vinodsanthanam/api:v6
+        imagePullPolicy: Never
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        ports:
+          - containerPort: 80
+        env:
+          - name: api_port
+            value: "8080"
+          - name: SERVICE_NAME
+            value: "middleware-canary"
+          - name: UPSTREAM_URI
+            value: "http://backend/"
+      imagePullSecrets:
+      - name: regcred
+---          
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: middleware
+spec:
+  hosts:
+  - middleware
+  http:
+  - match:
+    - headers:
+        x-dev-user:
+          exact: super-secret
+    route:
+      - destination:
+          host: middleware
+          subset: canary
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+  - route:
+    - destination:
+        host: middleware
+        subset: prod
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: middleware
+spec:
+  host: middleware
+  subsets:
+  - name: prod
+    labels:
+      version: prod      
+  - name: canary
+    labels:
+      version: canary
+---
