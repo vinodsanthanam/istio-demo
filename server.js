@@ -41,7 +41,8 @@ app.get('/', async(req, res) => {
   }
   const timeSpent = (Date.now() - begin) / 1000 + "secs "
 
-  res.end(`\n${service_name} - ${timeSpent}\n${upstream_uri} -> ${up} ${service_name}\n\n`);
+  res.write(`calling - ${service_name}`);
+  res.end(`\n${service_name} exec duration --- ${timeSpent}\n${upstream_uri} -> ${up}\n\n`);
 })
 
 app.get('/health', function(req, res) {

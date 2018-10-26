@@ -4,13 +4,20 @@ GRAFANA_POD_NAME=$(shell kubectl -n istio-system get pod -l app=grafana -o jsonp
 PROMETHEUS_POD_NAME=$(shell kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}')
 TELEMETRY_POD_NAME=$(shell kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}')
 
-clean:
+clean-all:
 	kubectl delete svc --all
 	kubectl delete deployment --all
 	kubectl delete VirtualService --all
 	kubectl delete DestinationRule --all
 	kubectl delete Gateway --all
 	kubectl delete ServiceEntry --all
+
+clean:
+	kubectl delete svc --all
+	kubectl delete deployment --all
+
+wait:
+	sleep 3
 
 ingress:
 	istioctl kube-inject -f istio/ingress.yaml | kubectl apply -f -
@@ -31,14 +38,13 @@ telemetry:
 	istioctl kube-inject -f istio/telemetry.yaml | kubectl apply -f -
 
 build:
-	eval $(minikube docker-env)
 	docker build -t vinodsanthanam/api:v6 .
 
 deploy:
 	istioctl kube-inject -f istio/deployment.yaml | kubectl apply -f -
 	istioctl kube-inject -f istio/services.yaml | kubectl apply -f -
 
-setup: build deploy ingress routing rules telemetry
+setup: build clean-all deploy ingress routing rules telemetry
 
 enable-egress: egress
 
@@ -56,4 +62,3 @@ ls:
 	sleep 3
 	watch -n30 kubectl get pods -o wide
 
-	
