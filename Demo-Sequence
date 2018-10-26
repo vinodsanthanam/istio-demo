@@ -5,4 +5,6 @@ Tracing - Forward Headers - make build deploy ls
 Canary - Forward Headers - make canary ls
 Fault Injection - make inject-fault
 Circuit Breakers - fail=0.5
+Telemetry
+Metrics
 Retries - make build deploy routing-with-retries ls
