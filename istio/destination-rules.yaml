@@ -1,9 +1,9 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: frontend
+  name: service-a
 spec:
-  host: frontend
+  host: service-a
   subsets:
   - name: prod
     labels:
@@ -12,9 +12,9 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: middleware
+  name: service-b
 spec:
-  host: middleware
+  host: service-b
   subsets:
   - name: prod
     labels:
@@ -23,9 +23,9 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: backend
+  name: service-c
 spec:
-  host: backend
+  host: service-c
   subsets:
   - name: prod
     labels:

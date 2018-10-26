@@ -44,7 +44,12 @@ deploy:
 	istioctl kube-inject -f istio/deployment.yaml | kubectl apply -f -
 	istioctl kube-inject -f istio/services.yaml | kubectl apply -f -
 
+canary:
+	istioctl kube-inject -f istio/canary.yaml | kubectl apply -f -
+
 setup: build clean-all deploy ingress routing rules telemetry
+
+reset: setup
 
 enable-egress: egress
 
@@ -60,5 +65,5 @@ ls:
 	kubectl get deployments -o wide
 	kubectl get pods -n istio-system
 	sleep 3
-	watch -n30 kubectl get pods -o wide
+	watch -n20 kubectl get pods -o wide
 

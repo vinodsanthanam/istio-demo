@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-prod
+  name: service-a-prod
 spec:
   selector:
     matchLabels:
-      app: frontend  
+      app: service-a  
   replicas: 1
   template:
     metadata:
       labels:
-        app: frontend
+        app: service-a
         version: prod
     spec:
       containers:
-      - name: frontend
+      - name: service-a
         image: vinodsanthanam/api:v6
         imagePullPolicy: Never
         livenessProbe:
@@ -29,29 +29,29 @@ spec:
           - name: api_port
             value: "8080"
           - name: SERVICE_NAME
-            value: "frontend-prod"
+            value: "service-a-prod"
           - name: UPSTREAM_URI
-            value: "http://middleware/"
+            value: "http://service-b/"
       imagePullSecrets:
       - name: regcred
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: middleware-prod
+  name: service-b-prod
 spec:
   selector:
     matchLabels:
-      app: middleware  
+      app: service-b  
   replicas: 1
   template:
     metadata:
       labels:
-        app: middleware
+        app: service-b
         version: prod
     spec:
       containers:
-      - name: middleware
+      - name: service-b
         image: vinodsanthanam/api:v6
         imagePullPolicy: Never
         ports:
@@ -60,29 +60,29 @@ spec:
           - name: api_port
             value: "8080"
           - name: SERVICE_NAME
-            value: "middleware-prod"
+            value: "service-b-prod"
           - name: UPSTREAM_URI
-            value: "http://backend/"
+            value: "http://service-c/"
       imagePullSecrets:
       - name: regcred
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-prod
+  name: service-c-prod
 spec:
   selector:
     matchLabels:
-      app: backend  
+      app: service-c  
   replicas: 1
   template:
     metadata:
       labels:
-        app: backend
+        app: service-c
         version: prod
     spec:
       containers:
-      - name: backend
+      - name: service-c
         image: vinodsanthanam/api:v6
         imagePullPolicy: Never
         ports:
@@ -91,7 +91,7 @@ spec:
           - name: api_port
             value: "8080"
           - name: SERVICE_NAME
-            value: "backend-prod"
+            value: "service-c-prod"
           - name: UPSTREAM_URI
             value: "http://worldclockapi.com/api/json/utc/now"
       imagePullSecrets:

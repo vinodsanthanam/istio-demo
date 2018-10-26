@@ -43,3 +43,7 @@ Install Istio
 ------------------------
 kubectl apply -f install/kubernetes/helm/istio/templates/crds.yaml
 kubectl apply -f install/kubernetes/istio-demo-auth.yaml
+
+Example Autoscaling
+------------------------
+kubectl autoscale deployment service-a-prod --cpu-percent=50 --min=1 --max=10

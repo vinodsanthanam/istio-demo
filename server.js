@@ -28,7 +28,7 @@ app.get('/', async(req, res) => {
   // createIssues(req, res);
 
   // Forward Headers for tracing
-  // headers = forwardTraceHeaders(req);
+  headers = forwardTraceHeaders(req);
 
   let up
   try {

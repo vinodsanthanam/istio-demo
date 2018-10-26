@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: middleware-canary
+  name: service-b-canary
 spec:
   selector:
     matchLabels:
-      app: middleware
+      app: service-b
       version: canary  
   replicas: 1
   template:
     metadata:
       labels:
-        app: middleware
+        app: service-b
         version: canary
     spec:
       containers:
-      - name: middleware
+      - name: service-b
         image: vinodsanthanam/api:v6
         imagePullPolicy: Never
         livenessProbe:
@@ -30,19 +30,19 @@ spec:
           - name: api_port
             value: "8080"
           - name: SERVICE_NAME
-            value: "middleware-canary"
+            value: "service-b-canary"
           - name: UPSTREAM_URI
-            value: "http://backend/"
+            value: "http://service-c/"
       imagePullSecrets:
       - name: regcred
 ---          
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: middleware
+  name: service-b
 spec:
   hosts:
-  - middleware
+  - service-b
   http:
   - match:
     - headers:
@@ -50,14 +50,14 @@ spec:
           exact: super-secret
     route:
       - destination:
-          host: middleware
+          host: service-b
           subset: canary
     retries:
       attempts: 3
       perTryTimeout: 2s
   - route:
     - destination:
-        host: middleware
+        host: service-b
         subset: prod
     retries:
       attempts: 3
@@ -66,14 +66,15 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: middleware
+  name: service-b
 spec:
-  host: middleware
+  host: service-b
   subsets:
   - name: prod
     labels:
-      version: prod      
+      version: prod       
   - name: canary
     labels:
       version: canary
+
 ---

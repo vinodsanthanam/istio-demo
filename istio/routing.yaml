@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: frontend 
+  name: service-a 
 spec:
   hosts:
   - "*"
@@ -17,39 +17,39 @@ spec:
         exact: /health/toggle
     route:
     - destination:
-        host: frontend
+        host: service-a
         port:
           number: 80
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: middleware
+  name: service-b
 spec:
   hosts:
-  - middleware
+  - service-b
   http:
   - match:
     - uri:
         exact: /
     route:
     - destination:
-        host: middleware
+        host: service-b
         subset: prod
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: backend
+  name: service-c
 spec:
   hosts:
-  - backend
+  - service-c
   http:
   - match:
     - uri:
         exact: /
     route:
     - destination:
-        host: backend
+        host: service-c
         subset: prod
 ---
