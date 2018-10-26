@@ -1,9 +1,8 @@
-Routing
-Egress
+service discovery
+Egress - make enable-egress
 Health
-Tracing - Forward Headers
-Canary - Forward Headers
-Fault Injection
-Retries
-
-Scaling
+Tracing - Forward Headers - make build deploy ls
+Canary - Forward Headers - make canary ls
+Fault Injection - make inject-fault
+Circuit Breakers - fail=0.5
+Retries - make build deploy routing-with-retries ls

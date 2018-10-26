@@ -25,7 +25,7 @@ app.get('/', async(req, res) => {
   const begin = Date.now()
 
   // Do Bad Things
-  // createIssues(req, res);
+  createIssues(req, res);
 
   // Forward Headers for tracing
   headers = forwardTraceHeaders(req);

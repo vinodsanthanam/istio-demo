@@ -54,6 +54,12 @@ spec:
       - name: service-b
         image: vinodsanthanam/api:v6
         imagePullPolicy: Never
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
         ports:
           - containerPort: 80
         env:
@@ -85,6 +91,12 @@ spec:
       - name: service-c
         image: vinodsanthanam/api:v6
         imagePullPolicy: Never
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
         ports:
           - containerPort: 80
         env:

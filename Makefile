@@ -47,7 +47,10 @@ deploy:
 canary:
 	istioctl kube-inject -f istio/canary.yaml | kubectl apply -f -
 
-setup: build clean-all deploy ingress routing rules telemetry
+inject-fault:
+	istioctl kube-inject -f istio/fault-injection.yaml | kubectl apply -f -	
+
+setup: build clean-all deploy ingress routing rules telemetry ls
 
 reset: setup
 
@@ -59,6 +62,7 @@ start-monitoring:
 	echo "Grafana on port 3000"
 	echo "Prometheus on port 9090"
 	echo "Telemetry on port 9093"
+	sleep 2
 	$(shell kubectl -n istio-system port-forward $(JAEGER_POD_NAME) 16686:16686 & kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) 8088:8088 & kubectl -n istio-system port-forward $(GRAFANA_POD_NAME) 3000:3000 & kubectl -n istio-system port-forward $(PROMETHEUS_POD_NAME) 9090:9090 & kubectl -n istio-system port-forward $(TELEMETRY_POD_NAME) 9093:9093)
 
 ls:
@@ -67,3 +71,5 @@ ls:
 	sleep 3
 	watch -n20 kubectl get pods -o wide
 
+lspods:
+	watch -n3 kubectl get pods -o wide

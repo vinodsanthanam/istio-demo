@@ -1,6 +1,7 @@
 Haven't figured out how to set docker context from within Make, hence set the context before you begin
 eval $(minikube docker-env)
 
+"brew install watch" before using the makefile
 
 View Istio log
 ------------------------
