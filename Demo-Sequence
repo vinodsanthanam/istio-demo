@@ -4,7 +4,8 @@ Health
 Tracing - Forward Headers - make build deploy ls
 Canary - Forward Headers - make canary ls
 Fault Injection - make inject-fault
-Circuit Breakers - fail=0.5
-Telemetry
-Metrics
+Circuit Breakers - fortio load -n 20 -c 3 http://192.168.99.100:31380/
+Telemetry - Fortio Load
+Metrics 
+
 Retries - make build deploy routing-with-retries ls

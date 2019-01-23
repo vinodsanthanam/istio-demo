@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: service-b
-        image: vinodsanthanam/api:v6
+        image: gcr.io/istio-228003/vinodsanthanam/api:v6
         imagePullPolicy: Never
         livenessProbe:
           httpGet:

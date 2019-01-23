@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a-prod
+spec:
+  selector:
+    matchLabels:
+      app: service-a  
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-a
+        version: prod
+    spec:
+      containers:
+      - name: service-a
+        image: gcr.io/istio-228003/vinodsanthanam/api:v6
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        ports:
+          - containerPort: 80
+        env:
+          - name: api_port
+            value: "8080"
+          - name: SERVICE_NAME
+            value: "service-a-prod"
+          - name: UPSTREAM_URI
+            value: "http://service-b/"
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-b-prod
+spec:
+  selector:
+    matchLabels:
+      app: service-b  
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-b
+        version: prod
+    spec:
+      containers:
+      - name: service-b
+        image: gcr.io/istio-228003/vinodsanthanam/api:v6
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        ports:
+          - containerPort: 80
+        env:
+          - name: api_port
+            value: "8080"
+          - name: SERVICE_NAME
+            value: "service-b-prod"
+          - name: UPSTREAM_URI
+            value: "http://service-c/"
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-c-prod
+spec:
+  selector:
+    matchLabels:
+      app: service-c  
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-c
+        version: prod
+    spec:
+      containers:
+      - name: service-c
+        image: gcr.io/istio-228003/vinodsanthanam/api:v6
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        ports:
+          - containerPort: 80
+        env:
+          - name: api_port
+            value: "8080"
+          - name: SERVICE_NAME
+            value: "service-c-prod"
+          - name: UPSTREAM_URI
+            value: "http://worldclockapi.com/api/json/utc/now"
+      imagePullSecrets:
+      - name: regcred
