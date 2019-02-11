@@ -23,12 +23,13 @@ app.set('port', (process.env.api_port));
 
 app.get('/', async(req, res) => {
   const begin = Date.now()
+  headers = {}
 
   // Do Bad Things
-  // createIssues(req, res);
+  //createIssues(req, res);
 
   // Forward Headers for tracing
-  // headers = forwardTraceHeaders(req);
+  headers = forwardTraceHeaders(req);
 
   let up
   try {
@@ -41,6 +42,7 @@ app.get('/', async(req, res) => {
   }
   const timeSpent = (Date.now() - begin) / 1000 + "secs "
 
+  // res.write(`I am the canary hiding :-/ calling - ${service_name}`);
   res.write(`calling - ${service_name}`);
   res.end(`\n${service_name} exec duration --- ${timeSpent}\n${upstream_uri} -> ${up}\n\n`);
 })

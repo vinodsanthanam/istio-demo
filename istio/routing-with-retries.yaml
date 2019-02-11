@@ -1,49 +1,39 @@
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: service-a 
+  name: service-c-prod
 spec:
-  hosts:
-  - "*"
-  gateways:
-  - api-ingress-gateway
-  http:
-  - match:
-    - uri:
-        exact: /
-    - uri:
-        exact: /health
-    - uri:
-        exact: /health/toggle
-    route:
-    - destination:
-        host: service-a
-        port:
-          number: 80
-    retries:
-      attempts: 3
-      perTryTimeout: 2s                  
----
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: service-b
-spec:
-  hosts:
-  - service-b
-  http:
-  - match:
-    - uri:
-        exact: /
-    - uri:
-        exact: /health
-    route:
-    - destination:
-        host: service-b
-        subset: prod
-    retries:
-      attempts: 3
-      perTryTimeout: 2s        
+  selector:
+    matchLabels:
+      app: service-c  
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-c
+        version: prod
+    spec:
+      containers:
+      - name: service-c
+        image: vinodsanthanam/api:fail
+        imagePullPolicy: Never
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        ports:
+          - containerPort: 80
+        env:
+          - name: api_port
+            value: "8080"
+          - name: SERVICE_NAME
+            value: "service-c-prod"
+          - name: UPSTREAM_URI
+            value: "http://worldclockapi.com/api/json/utc/now"
+      imagePullSecrets:
+      - name: regcred
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -63,6 +53,6 @@ spec:
         host: service-c
         subset: prod
     retries:
-      attempts: 3
-      perTryTimeout: 2s
+      attempts: 4
+      perTryTimeout: 2s              
 ---

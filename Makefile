@@ -18,26 +18,52 @@ clean:
 	kubectl delete svc --all
 	kubectl delete deployment --all
 
-wait:
-	sleep 3
+setup: build clean-all deploy ingress routing rules telemetry ls
+
+setupgcloud: use_gcloud_context rbac2gcloud setuphelm build2gcloud push2gcloud deploy2gcloud ingress routing rules
+
+reset: setup
+
+build:
+	docker build -t vinodsanthanam/api:v6 .
+
+deploy:
+	istioctl kube-inject -f istio/deployment.yaml | kubectl apply -f -
+	istioctl kube-inject -f istio/services.yaml | kubectl apply -f -
 
 ingress:
 	istioctl kube-inject -f istio/ingress.yaml | kubectl apply -f -
 
-egress:
-	istioctl kube-inject -f istio/egress.yaml | kubectl apply -f -
-
 routing:
 	istioctl kube-inject -f istio/routing.yaml | kubectl apply -f -
-
-routing-with-retries:
-	istioctl kube-inject -f istio/routing-with-retries.yaml | kubectl apply -f -
 
 rules:	
 	istioctl kube-inject -f istio/destination-rules.yaml | kubectl apply -f -
 
 telemetry:
 	istioctl kube-inject -f istio/telemetry.yaml | kubectl apply -f -
+
+enable-egress: egress	
+
+egress:
+	istioctl kube-inject -f istio/egress.yaml | kubectl apply -f -
+
+retries:
+	istioctl kube-inject -f istio/routing-with-retries.yaml | kubectl apply -f -
+
+canary:
+	istioctl kube-inject -f istio/canary.yaml | kubectl apply -f -
+
+inject-fault:
+	istioctl kube-inject -f istio/fault-injection.yaml | kubectl apply -f -	
+
+circuit-breaker:
+	istioctl kube-inject -f istio/circuit-breaker.yaml | kubectl apply -f -	
+
+# Commands for moving stuff to GKE
+setprojectid:
+	# "pull project id from GKE and set it as environment variable"
+	export PROJECT_ID="$(gcloud config get-value project -q)"
 
 build2gcloud:
 	docker build -t $(IMAGE_NAME) .
@@ -53,38 +79,31 @@ deploy2gcloud:
 canary2gcloud:
 	istioctl kube-inject -f istio/gcloud/canary.yaml | kubectl apply -f -
 
-build:
-  	docker build -t vinodsanthanam/api:v6 .
+rbac2gcloud:
+	kubectl create -f istio/rbac-config.yaml
 
-deploy:
-	istioctl kube-inject -f istio/deployment.yaml | kubectl apply -f -
-	istioctl kube-inject -f istio/services.yaml | kubectl apply -f -
 
-canary:
-	istioctl kube-inject -f istio/canary.yaml | kubectl apply -f -
-
-inject-fault:
-	istioctl kube-inject -f istio/fault-injection.yaml | kubectl apply -f -	
-
-circuit-breaker:
-	istioctl kube-inject -f istio/circuit-breaker.yaml | kubectl apply -f -	
-
-setup: build clean-all deploy ingress routing rules telemetry ls
-
-setupgcloud: build2gcloud push2gcloud deploy2gcloud ingress routing rules
-
-reset: setup
-
-enable-egress: egress
+# Utility commands
+setuphelm:
+	helm init --service-account tiller
 
 start-monitoring:
-	@echo "Jaeger on port 16686"
-	@echo "Service Graph on port 8088"
-	@echo "Grafana on port 3000"
-	@echo "Prometheus on port 9090"
-	@echo "Telemetry on port 9093"
-	@sleep 2
 	$(shell kubectl -n istio-system port-forward $(JAEGER_POD_NAME) 16686:16686 & kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) 8088:8088 & kubectl -n istio-system port-forward $(GRAFANA_POD_NAME) 3000:3000 & kubectl -n istio-system port-forward $(PROMETHEUS_POD_NAME) 9090:9090 & kubectl -n istio-system port-forward $(TELEMETRY_POD_NAME) 9093:9093)
+
+monitor-jaeger:
+	kubectl -n istio-system port-forward $(JAEGER_POD_NAME) 16686:16686
+
+monitor-prometheus:
+	kubectl -n istio-system port-forward $(PROMETHEUS_POD_NAME) 9090:9090
+
+monitor-servicegraph:
+	kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) 8088:8088
+
+monitor-grafana:
+	kubectl -n istio-system port-forward $(GRAFANA_POD_NAME) 3000:3000
+
+monitor-telemetry:
+	kubectl -n istio-system port-forward $(TELEMETRY_POD_NAME) 9093:9093
 
 ls:
 	kubectl get deployments -o wide
@@ -93,14 +112,49 @@ ls:
 	watch -n20 kubectl get pods -o wide --show-labels
 
 lspods:
-	watch -n3 kubectl get pods -o wide
+	watch -n10 kubectl get pods -o wide
 
 lsipods:
-	watch -n3 kubectl get pods -n istio-system
+	watch -n10 kubectl get pods -n istio-system
 
 loadtest:
 	fortio load -n 20 -c 3 http://192.168.99.100:31380/	
 
+getport:
+	kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}'
+
+getip:
+	minikube ip
+
+show-all-containers:
+	kubectl get deployments -n istio-system -o wide
+
+container-image-name:
+	kubectl get pod service-c-prod-87bb847b7-glk4d -o jsonpath="{..image}"
+
+scale-containers:
+	kubectl scale --replicas=3 deployment/service-c-prod
+
+# use the toggle command to switch kubectl context between minikube and gcloud cluster
+# change the grep to your cluster name
+CLTR=$(shell kubectl config get-contexts | grep cluster | colrm 1 1 | cut -d" " -f13)
+CUR_CLTR=$(shell kubectl config current-context)
+toggle_kube_context:
+	@echo "current context is $(CUR_CLTR)"
+	@echo "cluster is $(CLTR)"
+ifeq ($(CUR_CLTR), minikube)
+	kubectl config use-context $(CLTR)
+else
+	kubectl config use-context minikube
+endif
+
+current_kube_context:
+	kubectl config current-context
+
+use_gcloud_context:
+	kubectl config use-context $(CLTR)
+
+# Sample make targets to play with
 test:
 ifdef chk
 	@echo $(chk)

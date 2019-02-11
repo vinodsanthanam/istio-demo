@@ -4,6 +4,9 @@ metadata:
   name: service-a
 spec:
   host: service-a
+  trafficPolicy:
+    loadBalancer:
+      simple: RANDOM
   subsets:
   - name: prod
     labels:

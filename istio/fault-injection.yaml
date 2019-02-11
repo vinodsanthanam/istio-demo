@@ -9,7 +9,7 @@ spec:
   - fault:
       abort:
         httpStatus: 503
-        percent: 50
+        percent: 30
     match:
     - uri:
         exact: /
