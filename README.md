@@ -54,13 +54,13 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5, Kuber
 
                 kubectl -n istio-system logs $(kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}') -c mixer
 
-| Tables        | Are           |
-| ------------- |:-------------:|
+| Parameter        | Description           |
+| ------------- | ------------- |
 | -n istio-system      | -n is to specify the namespace in which the pods are executing, in this case its the istio's namespace |
 | app      | is the name of the app we want to check the logs for      |
 | jsonpath | is more like XPATH for json      |
-| -c | Identifies the container in the pod, you can identify the container name by executing kubectl get deployments -n istio-system -o wide --show-labels |
-| $(kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}') | Helps identify the name of the pod, you can also get it by executing kubectl get pods -n istio-system -o wide --show-labels |
+| -c | Identifies the container in the pod, you can identify the container name by executing "kubectl get deployments -n istio-system -o wide --show-labels" |
+| $(kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}') | Helps identify the name of the pod, you can also get it by executing "kubectl get pods -n istio-system -o wide --show-labels" |
 
 
 
