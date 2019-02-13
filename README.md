@@ -68,8 +68,21 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5, Kuber
         kubectl delete -f install/kubernetes/istio-demo-auth.yaml
         kubectl delete -f install/kubernetes/helm/istio/templates/crds.yaml -n istio-system
 
+## How to view Istio Components
+* You can view the components running in your Istio Cluster using kubectl port forwarding feature. Istio by default does not allow incoming connections unless you setup appropriate ingress. Few of the default components which gets installed with Istio and default port-forwarding commands (replace the $() with the pod name)
+| Component | Port Forward | localhost URL |
+| :------------- | :------------- | :------------- |
+| Jaeger | kubectl -n istio-system port-forward $(JAEGER_POD_NAME) 16686:16686 | [local jaeger](http://localhost:16686) |
+| Prometheus | kubectl -n istio-system port-forward $(PROMETHEUS_POD_NAME) 9090:9090 | [local prometheus](http://localhost:9090/graph?g0.range_input=1h&g0.expr=grpc_server_handled_total&g0.tab=1) |
+| Grafana | kubectl -n istio-system port-forward $(GRAFANA_POD_NAME) 3000:3000 | [local grafana](http://localhost:9092/d/1/istio-mesh-dashboard?refresh=5s&orgId=1) |
+| Metrics | kubectl -n istio-system port-forward $(TELEMETRY_POD_NAME) 9093:9093 | [local metrics](http://localhost:9093/metrics) |
+| Service Graph | kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) 8088:8088 | [local jaeger](http://localhost:8088/force/forcegraph.html) |
 
-
+	* or you can use the make monitor command as shortcut for port forwarding
+		
+                make monitor-jaeger
+                make monitor-prometheus
+                ...
 
 
 
