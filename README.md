@@ -62,6 +62,11 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5, Kuber
 | -c | Identifies the container in the pod, you can identify the container name by executing "kubectl get deployments -n istio-system -o wide --show-labels" |
 | $(kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}') | Helps identify the name of the pod, you can also get it by executing "kubectl get pods -n istio-system -o wide --show-labels" |
 
+## Remove Istio from your local kubernetes cluster
+* Start minikube, cd to the istio folder you had extraced. Execute the following commands to remove istio and all the customer resource definitions you had previously installed.
+		
+        kubectl delete -f install/kubernetes/istio-demo-auth.yaml
+        kubectl delete -f install/kubernetes/helm/istio/templates/crds.yaml -n istio-system
 
 
 
