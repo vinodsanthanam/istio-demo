@@ -70,6 +70,7 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5, Kuber
 
 ## How to view Istio Components
 * You can view the components running in your Istio Cluster using kubectl port forwarding feature. Istio by default does not allow incoming connections unless you setup appropriate ingress. Few of the default components which gets installed with Istio and default port-forwarding commands (replace the $() with the pod name)
+
 | Component | Port Forward | localhost URL |
 | :------------- | :------------- | :------------- |
 | Jaeger | kubectl -n istio-system port-forward $(JAEGER_POD_NAME) 16686:16686 | [local jaeger](http://localhost:16686) |
