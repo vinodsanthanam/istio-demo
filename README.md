@@ -13,7 +13,9 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5
         minikube start --memory=16384 --cpus=4 (if you have better RAM capacity)
 
 * As you start building your docker images, instead of using local docker context or docker hub for hosting the docker images, it is much faster to use the docker context of minikube to host the images. Run the following command to set the docker context to minikube
-	* eval $(minikube docker-env)
+
+        eval $(minikube docker-env)
+        
 	* In case you are working between minikube and cloud provider like GKE, you would have to switch the docker context between your local minikube host and the remote host.
 		* The make file as part of the codebase has a target which helps you toggle context between minikube and gcloud
                 
@@ -30,7 +32,7 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5
         minikube start --memory=16384 --cpus=4
 
 	* once minikube is started, you can check your local k8 cluster by typing the following command on your terminal
-		
+
         minikube dashboard
 
 * Once you have started minikube, cd to the istio folder you had just extracted and execute the following commands
@@ -46,7 +48,7 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5
 		
         kubectl get pods -n istio-system -o wide --show-labels (or)
         make lsipods
-        
+
 	* You may notice that some of the components are running, some may be just initializing, restarting or errored out. In case any of the pods are not starting you can check the log for each of the application to debug. In some cases i.e pilot which is one of the istio [component](https://istio.io/docs/concepts/what-is-istio/) may not start if you had not started Istio with enough resources.
 	* You can view the logs in each of pods running the following command
 		* 
