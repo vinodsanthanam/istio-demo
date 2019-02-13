@@ -33,7 +33,7 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5
 
 	* once minikube is started, you can check your local k8 cluster by typing the following command on your terminal
 
-        minikube dashboard
+                minikube dashboard
 
 * Once you have started minikube, cd to the istio folder you had just extracted and execute the following commands
 		
