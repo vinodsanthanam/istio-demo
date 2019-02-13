@@ -1,4 +1,4 @@
-This is a demo app for toying with Istio, tested with Istio Version 1.0.5
+This is a demo app for toying with Istio, tested with Istio Version 1.0.5, Kubernetes v1.13.2
 
 ## Prerequisites
 * The setup instructions assumes you use Mac OS, if you use any other OS, please follow instructions for the appropriate platform
@@ -15,7 +15,7 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5
 * As you start building your docker images, instead of using local docker context or docker hub for hosting the docker images, it is much faster to use the docker context of minikube to host the images. Run the following command to set the docker context to minikube
 
         eval $(minikube docker-env)
-        
+
 	* In case you are working between minikube and cloud provider like GKE, you would have to switch the docker context between your local minikube host and the remote host.
 		* The make file as part of the codebase has a target which helps you toggle context between minikube and gcloud
                 
@@ -51,4 +51,22 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5
 
 	* You may notice that some of the components are running, some may be just initializing, restarting or errored out. In case any of the pods are not starting you can check the log for each of the application to debug. In some cases i.e pilot which is one of the istio [component](https://istio.io/docs/concepts/what-is-istio/) may not start if you had not started Istio with enough resources.
 	* You can view the logs in each of pods running the following command
-		* 
+
+                kubectl -n istio-system logs $(kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}') -c mixer
+
+| -n istio-system      | -n is to specify the namespace in which the pods are executing, in this case its the istio's namespace |
+| app      | is the name of the app we want to check the logs for      |
+| jsonpath | is more like XPATH for json      |
+| -c | Identifies the container in the pod, you can identify the container name by executing kubectl get deployments -n istio-system -o wide --show-labels |
+| $(kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}') | Helps identify the name of the pod, you can also get it by executing kubectl get pods -n istio-system -o wide --show-labels |
+
+
+
+
+
+
+
+
+
+
+
