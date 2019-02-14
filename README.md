@@ -77,13 +77,43 @@ This is a demo app for toying with Istio, tested with Istio Version 1.0.5, Kuber
 | Prometheus | kubectl -n istio-system port-forward $(PROMETHEUS_POD_NAME) 9090:9090 | [local prometheus](http://localhost:9090/graph?g0.range_input=1h&g0.expr=grpc_server_handled_total&g0.tab=1) |
 | Grafana | kubectl -n istio-system port-forward $(GRAFANA_POD_NAME) 3000:3000 | [local grafana](http://localhost:9092/d/1/istio-mesh-dashboard?refresh=5s&orgId=1) |
 | Metrics | kubectl -n istio-system port-forward $(TELEMETRY_POD_NAME) 9093:9093 | [local metrics](http://localhost:9093/metrics) |
-| Service Graph | kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) 8088:8088 | [local jaeger](http://localhost:8088/force/forcegraph.html) |
+| Service Graph | kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) 8088:8088 | [local graph](http://localhost:8088/force/forcegraph.html) |
 
-	* or you can use the make monitor command as shortcut for port forwarding
+or you can use the make monitor command as shortcut for port forwarding
 		
                 make monitor-jaeger
                 make monitor-prometheus
                 ...
+
+## Make shortcuts
+make $command
+
+| Command | Description |
+| :------------- | :------------- |
+| clean-all      | Removes all the deployments, virtual services, destination rules, services, pods, gateway and service entries |
+| clean | Removes installed deployments and services |
+| setup | builds docker image, cleans-all, deploys the app, sets up ingress, routing and destination rules, adds telemetry metrics and looks up running instances of the pods |
+| reset | is basically pseudo target for setup |
+| build | builds docker image |
+| deploy | deploys the images and creates the corresponding services |
+| ingress | sets up the incoming ingress gateway |
+| routing | sets up the routing logic from gateway to pods |
+| rules | sets up the load balancing policies for the services |
+| egress | sets up the service entry for communication outside of the mesh |
+| retries | Updates the retries policies for the service under test |
+| canary | Deploys the canary version of the service and sets up partial redirection of the requests |
+| inject-fault | Injects faults in to the environment for the service |
+
+
+Utility Commands
+
+| Command | Description |
+| :------------- | :------------- |
+| ls | displays all running deployments and pods |
+| lspods | displays all running pods with additional information |
+| lsipods | displays all running pods in istio-system namespace |
+| getip | gets the ip address of minikube |
+| show-all-containers | displays all the deployments and the container information |
 
 
 
