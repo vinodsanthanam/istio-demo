@@ -48,8 +48,11 @@ enable-egress: egress
 egress:
 	istioctl kube-inject -f istio/egress.yaml | kubectl apply -f -
 
-retries:
+deploy-failures:
 	docker build -t istiodemo/api:fail .
+	istioctl kube-inject -f istio/deploy-failures.yaml | kubectl apply -f -
+
+retries:
 	istioctl kube-inject -f istio/routing-with-retries.yaml | kubectl apply -f -
 
 canary:
@@ -111,13 +114,13 @@ ls:
 	kubectl get deployments -o wide
 	kubectl get pods -n istio-system
 	sleep 3
-	watch -n20 kubectl get pods -o wide --show-labels
+	watch -n5 kubectl get pods -o wide --show-labels
 
 lspods:
 	watch -n1 kubectl get pods -o wide
 
 lsipods:
-	watch -n10 kubectl get pods -n istio-system
+	watch -n5 kubectl get pods -n istio-system
 
 loadtest:
 	fortio load -n 20 -c 3 http://192.168.99.100:31380/	
@@ -135,7 +138,7 @@ container-image-name:
 	kubectl get pod service-c-prod-6f9c56f5b5-hm9c7 -o jsonpath="{..image}"
 
 scale-containers-for-service-c:
-	kubectl scale --replicas=3 deployment/service-c-prod
+	kubectl scale --replicas=5 deployment/service-c-prod
 
 # use the toggle command to switch kubectl context between minikube and gcloud cluster
 # change the grep to your cluster name

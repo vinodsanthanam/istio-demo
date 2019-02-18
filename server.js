@@ -32,7 +32,7 @@ app.get('/', async(req, res) => {
   headers = forwardCanaryAndFailureHeaders(req);
 
   // Do Bad Things
-  // createIssues(req, res);
+  createIssues(req, res);
 
   let up
   try {
@@ -45,7 +45,7 @@ app.get('/', async(req, res) => {
   }
   const timeSpent = (Date.now() - begin) / 1000 + "secs "
 
-  res.write(`I am the canary hiding :-/ calling - ${upstream_uri}`);
+  // res.write(`I am the canary hiding :-/ calling - ${upstream_uri}`);
   res.write(`calling - ${upstream_uri}`);
   res.end(`\n${service_name} exec duration --- ${timeSpent}\n${upstream_uri} -> ${up}\n\n`);
 })
