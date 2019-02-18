@@ -100,6 +100,7 @@ or you can use the make monitor command as shortcut for port forwarding
 | routing | sets up the routing logic from gateway to pods |
 | rules | sets up the load balancing policies for the services |
 | egress | sets up the service entry for communication outside of the mesh |
+| deploy-failures | Deploys the code to service-c, Please modify the code to add failures |
 | retries | Updates the retries policies for the service under test |
 | canary | Deploys the canary version of the service and sets up partial redirection of the requests |
 | inject-fault | Injects faults in to the environment for the service |
@@ -112,8 +113,11 @@ Utility Commands
 | ls | displays all running deployments and pods |
 | lspods | displays all running pods with additional information |
 | lsipods | displays all running pods in istio-system namespace |
+| loadtest | Runs the fortio loadtest, assumes you have fortio in the path |
 | getip | gets the ip address of minikube |
+| toggle_kube_context | Toggles kube context between minikube and gcloud |
 | show-all-containers | displays all the deployments and the container information |
+| scale-containers-for-service-c | Scales the container images to 5 for service c |
 
 
 

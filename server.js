@@ -32,7 +32,7 @@ app.get('/', async(req, res) => {
   headers = forwardCanaryAndFailureHeaders(req);
 
   // Do Bad Things
-  createIssues(req, res);
+  // createIssues(req, res);
 
   let up
   try {
