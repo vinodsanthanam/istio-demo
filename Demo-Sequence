@@ -20,7 +20,7 @@ This is to demonstrate how to inject fault without modifying code for testing
 
 9. Telemetry - Fortio Load
 
-10. Metrics - istio-double-requestcount
+10. Metrics - demo_request_count
 
 
 
