@@ -25,11 +25,14 @@ app.get('/', async(req, res) => {
   const begin = Date.now()
   headers = {}
 
-  // Do Bad Things
-  //createIssues(req, res);
-
   // Forward Headers for tracing
-  headers = forwardTraceHeaders(req);
+  // headers = forwardTraceHeaders(req);
+
+  // Forward Headers for canary and failure requests
+  headers = forwardCanaryAndFailureHeaders(req);
+
+  // Do Bad Things
+  // createIssues(req, res);
 
   let up
   try {
@@ -42,8 +45,8 @@ app.get('/', async(req, res) => {
   }
   const timeSpent = (Date.now() - begin) / 1000 + "secs "
 
-  // res.write(`I am the canary hiding :-/ calling - ${service_name}`);
-  res.write(`calling - ${service_name}`);
+  res.write(`I am the canary hiding :-/ calling - ${upstream_uri}`);
+  res.write(`calling - ${upstream_uri}`);
   res.end(`\n${service_name} exec duration --- ${timeSpent}\n${upstream_uri} -> ${up}\n\n`);
 })
 
@@ -67,7 +70,18 @@ function forwardTraceHeaders(req) {
     'x-b3-parentspanid',
     'x-b3-sampled',
     'x-b3-flags',
-    'x-ot-span-context',
+    'x-ot-span-context'
+  ]
+  const headers = {}
+  for (let h of incoming_headers) {
+    if (req.header(h))
+      headers[h] = req.header(h)
+  }
+  return headers
+}
+
+function forwardCanaryAndFailureHeaders(req) {
+  incoming_headers = [
     'x-dev-user',
     'fail'
   ]
@@ -78,7 +92,6 @@ function forwardTraceHeaders(req) {
   }
   return headers
 }
-
 
 
 function createIssues(req, res) {

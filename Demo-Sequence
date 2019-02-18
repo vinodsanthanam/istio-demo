@@ -1,25 +1,25 @@
-service discovery - overall service call chains with names instead of ip address
-Egress - make enable-egress
-Health - Show toggle and pod restarts
-Tracing - 
+1. Service Discovery - overall service call chains with names instead of ip address
+2. Egress - make enable-egress
+3. Health - Show toggle and pod restarts
+4. Tracing - 
 uncomment forward trace headers and build, deploy
 
-Canary - 
-Uncomment log for canary and build docker image (docker build istiodemo/api:canary .) and make canary
+5. Canary - x-dev-user=vinodsa
+Uncomment log for canary and make canary
 
-Fault Injection - make inject-fault (Injected fault in Service C)
-This is to demonstrate how to inject fault without modifying code for testing
-
-Retries - 
-modify code to pass traceheaders and deploy all
+6. Retries - (fail header)
+modify code to pass forwardCanaryAndFailureHeaders and deploy all
 modify code to create failure "docker build istiodemo/api:fail ." and "make retries"
 for retries make sure you scale after the failures to demonstrate retries send retry requests to different pods (no more 503's)
 
-Circuit Breakers - fortio load -n 20 -c 3 http://192.168.99.100:31380/
+7. Fault Injection - make inject-fault (Injected fault in Service C)
+This is to demonstrate how to inject fault without modifying code for testing
 
-Telemetry - Fortio Load
+8. Circuit Breakers - fortio load -n 20 -c 3 http://192.168.99.100:31380/
 
-Metrics - istio-double-requestcount
+9. Telemetry - Fortio Load
+
+10. Metrics - istio-double-requestcount
 
 
 

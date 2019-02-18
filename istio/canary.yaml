@@ -52,16 +52,10 @@ spec:
       - destination:
           host: service-b
           subset: canary
-    retries:
-      attempts: 3
-      perTryTimeout: 2s
   - route:
     - destination:
         host: service-b
         subset: prod
-    retries:
-      attempts: 3
-      perTryTimeout: 2s
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule

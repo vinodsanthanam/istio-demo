@@ -49,10 +49,11 @@ egress:
 	istioctl kube-inject -f istio/egress.yaml | kubectl apply -f -
 
 retries:
+	docker build -t istiodemo/api:fail .
 	istioctl kube-inject -f istio/routing-with-retries.yaml | kubectl apply -f -
 
 canary:
-	docker build istiodemo/api:canary .
+	docker build -t istiodemo/api:canary .
 	istioctl kube-inject -f istio/canary.yaml | kubectl apply -f -
 
 inject-fault:
@@ -113,7 +114,7 @@ ls:
 	watch -n20 kubectl get pods -o wide --show-labels
 
 lspods:
-	watch -n10 kubectl get pods -o wide
+	watch -n1 kubectl get pods -o wide
 
 lsipods:
 	watch -n10 kubectl get pods -n istio-system
@@ -133,7 +134,7 @@ show-all-containers:
 container-image-name:
 	kubectl get pod service-c-prod-6f9c56f5b5-hm9c7 -o jsonpath="{..image}"
 
-scale-containers:
+scale-containers-for-service-c:
 	kubectl scale --replicas=3 deployment/service-c-prod
 
 # use the toggle command to switch kubectl context between minikube and gcloud cluster
