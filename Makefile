@@ -4,7 +4,7 @@ GRAFANA_POD_NAME=$(shell kubectl -n istio-system get pod -l app=grafana -o jsonp
 PROMETHEUS_POD_NAME=$(shell kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}')
 TELEMETRY_POD_NAME=$(shell kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}')
 
-IMAGE_NAME=gcr.io/${PROJECT_ID}/vinodsanthanam/api:v6
+IMAGE_NAME=gcr.io/${PROJECT_ID}/istiodemo/api:v6
 
 clean-all:
 	kubectl delete svc --all
@@ -25,7 +25,7 @@ setupgcloud: use_gcloud_context rbac2gcloud setuphelm build2gcloud push2gcloud d
 reset: setup
 
 build:
-	docker build -t vinodsanthanam/api:v6 .
+	docker build -t istiodemo/api:v6 .
 
 deploy:
 	istioctl kube-inject -f istio/deployment.yaml | kubectl apply -f -
@@ -52,6 +52,7 @@ retries:
 	istioctl kube-inject -f istio/routing-with-retries.yaml | kubectl apply -f -
 
 canary:
+	docker build istiodemo/api:canary .
 	istioctl kube-inject -f istio/canary.yaml | kubectl apply -f -
 
 inject-fault:
@@ -130,7 +131,7 @@ show-all-containers:
 	kubectl get deployments -n istio-system -o wide
 
 container-image-name:
-	kubectl get pod service-c-prod-87bb847b7-glk4d -o jsonpath="{..image}"
+	kubectl get pod service-c-prod-6f9c56f5b5-hm9c7 -o jsonpath="{..image}"
 
 scale-containers:
 	kubectl scale --replicas=3 deployment/service-c-prod

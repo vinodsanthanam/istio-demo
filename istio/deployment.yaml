@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: service-a
-        image: vinodsanthanam/api:v6
+        image: istiodemo/api:v6
         imagePullPolicy: Never
         livenessProbe:
           httpGet:
@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
       - name: service-b
-        image: vinodsanthanam/api:v6
+        image: istiodemo/api:v6
         imagePullPolicy: Never
         livenessProbe:
           httpGet:
@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
       - name: service-c
-        image: vinodsanthanam/api:v6
+        image: istiodemo/api:v6
         imagePullPolicy: Never
         livenessProbe:
           httpGet:

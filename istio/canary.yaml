@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: service-b
-        image: vinodsanthanam/api:canary
+        image: istiodemo/api:canary
         imagePullPolicy: Never
         livenessProbe:
           httpGet:

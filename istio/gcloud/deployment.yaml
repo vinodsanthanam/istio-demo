@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: service-a
-        image: gcr.io/istio-228003/vinodsanthanam/api:v6
+        image: gcr.io/istio-228003/istiodemo/api:v6
         livenessProbe:
           httpGet:
             path: /health
@@ -51,7 +51,7 @@ spec:
     spec:
       containers:
       - name: service-b
-        image: gcr.io/istio-228003/vinodsanthanam/api:v6
+        image: gcr.io/istio-228003/istiodemo/api:v6
         livenessProbe:
           httpGet:
             path: /health
@@ -87,7 +87,7 @@ spec:
     spec:
       containers:
       - name: service-c
-        image: gcr.io/istio-228003/vinodsanthanam/api:v6
+        image: gcr.io/istio-228003/istiodemo/api:v6
         livenessProbe:
           httpGet:
             path: /health
