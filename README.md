@@ -127,7 +127,7 @@ Create your GCP Account and follow instructions [over here](https://istio.io/doc
 The free account should be more than enough to play with Istio on GKE, Just make sure you create the cluster in your appropriate region, select 1 Node with 4 CPU's.
 You can create the cluster from the GKE UI.
 
-<img src="/help/images/gke_cluster_setup.png" width="50%" style="display:block;margin-left:auto;margin-right:auto">
+<img src="/help/images/gke_cluster_setup.png" width="50%" style="max-width:100%;display:block;margin-left:auto;margin-right:auto">
 
 Before you begin deploying applications make sure you have switched the local kubectl context to gcloud. You can do this by 
 
