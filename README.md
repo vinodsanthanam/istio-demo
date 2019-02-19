@@ -121,6 +121,13 @@ Utility Commands
 
 
 
+## Deploying to GKE
+
+Create your GCP Account and follow instructions [over here](https://istio.io/docs/setup/kubernetes/platform-setup/gke/) to setup your gcloud credentials
+The free account should be more than enough to play with Istio on GKE, Just make sure you create the cluster in your appropriate region, select 1 Node with 4 CPU's.
+You can create the cluster from the GKE UI.
+![alt text](/help/images/gke_cluster_setup.png)
+
 
 
 
