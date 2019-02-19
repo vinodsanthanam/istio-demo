@@ -136,10 +136,22 @@ Before you begin deploying applications make sure you have switched the local ku
         > kubectl config use-context $cluster_name
 
 or
+        > make use_gcloud_context
 
-
+In order to be able to use the gcloud utility commands in the make file, you need to export the gcloud project id in to an environment variable as below.
 
         > export PROJECT_ID="$(gcloud config get-value project -q)"
+
+Similar to utility commands previously described for minikube, the below mentioned handy make commands help build, deploy to gcloud
+
+| Command | Description |
+| :------------- | :------------- |
+| setprojectid | Sets the gcloud project id as an environment variable |
+| build2gcloud | Builds the docker image locally for gcr.io/ |
+| push2gcloud | Pushes the docker image to the gcloud registry |
+| deploy2gcloud | Deploys the images as the deployment descriptor in /istio/gcloud/deployment.yaml file and sets up the services |
+
+The rest of the commands like canary, inject-fault, egress, ingress, rules, routing can be executed as such.
 
 
 
