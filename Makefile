@@ -20,7 +20,7 @@ clean:
 
 setup: build clean-all deploy ingress routing rules telemetry ls
 
-setupgcloud: use_gcloud_context rbac2gcloud setuphelm build2gcloud push2gcloud deploy2gcloud ingress routing rules
+setupgcloud: use_gcloud_context build2gcloud push2gcloud deploy2gcloud ingress routing rules
 
 reset: setup
 
@@ -83,9 +83,6 @@ deploy2gcloud:
 
 canary2gcloud:
 	istioctl kube-inject -f istio/gcloud/canary.yaml | kubectl apply -f -
-
-rbac2gcloud:
-	kubectl create -f istio/rbac-config.yaml
 
 
 # Utility commands

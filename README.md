@@ -126,9 +126,20 @@ Utility Commands
 Create your GCP Account and follow instructions [over here](https://istio.io/docs/setup/kubernetes/platform-setup/gke/) to setup your gcloud credentials
 The free account should be more than enough to play with Istio on GKE, Just make sure you create the cluster in your appropriate region, select 1 Node with 4 CPU's.
 You can create the cluster from the GKE UI.
-![alt text](/help/images/gke_cluster_setup.png)
+
+![alt text](/help/images/gke_cluster_setup.png =300x)
+
+Before you begin deploying applications make sure you have switched the local kubectl context to gcloud. You can do this by 
+
+        > kubectl config get-contexts
+        The get contexts gets a bunch of contexts associated with your kubectl. Copy the cluster information for your gcloud and then execute the below command to set the context
+        > kubectl config use-context $cluster_name
+
+or
 
 
+
+        > export PROJECT_ID="$(gcloud config get-value project -q)"
 
 
 
