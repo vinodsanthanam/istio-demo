@@ -29,7 +29,7 @@ app.get('/', async(req, res) => {
   // headers = forwardTraceHeaders(req);
 
   // Forward Headers for canary and failure requests
-  headers = forwardCanaryAndFailureHeaders(req);
+  // headers = forwardCanaryAndFailureHeaders(req);
 
   // Do Bad Things
   // createIssues(req, res);

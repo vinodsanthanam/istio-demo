@@ -3,6 +3,9 @@ SERVICEGRAPH_POD_NAME=$(shell kubectl -n istio-system get pod -l app=servicegrap
 GRAFANA_POD_NAME=$(shell kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}')
 PROMETHEUS_POD_NAME=$(shell kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}')
 TELEMETRY_POD_NAME=$(shell kubectl -n istio-system get pod -l app=telemetry -o jsonpath='{.items[0].metadata.name}')
+INGRESS_POD_NAME=$(shell kubectl -n istio-system get pod -l app=istio-ingressgateway -o jsonpath='{.items[0].metadata.name}')
+PILOT_POD_NAME=$(shell kubectl -n istio-system get pod -l app=pilot -o jsonpath='{.items[0].metadata.name}')
+EGRESS_POD_NAME=$(shell kubectl get pod -l istio=egressgateway -n istio-system -o jsonpath='{.items[0].metadata.name}')
 
 IMAGE_NAME=gcr.io/${PROJECT_ID}/istiodemo/api:v6
 
@@ -106,6 +109,30 @@ monitor-grafana:
 
 monitor-telemetry:
 	kubectl -n istio-system port-forward $(TELEMETRY_POD_NAME) 9093:9093
+
+log-ingress:
+	kubectl -n istio-system logs $(INGRESS_POD_NAME) -c istio-proxy
+
+log-pilot:
+	kubectl -n istio-system logs $(PILOT_POD_NAME) -c istio-proxy
+
+log-egress:
+	kubectl -n istio-system logs $(EGRESS_POD_NAME) -c istio-proxy
+
+open-grafana:
+	open http://localhost:9092/d/1/istio-mesh-dashboard?refresh=5s&orgId=1
+
+open-prometheus:
+	open http://localhost:9090/graph?g0.range_input=1h&g0.expr=grpc_server_handled_total&g0.tab=1
+
+open-jaeger:
+	open http://localhost:16686
+
+open-metrics:
+	open http://localhost:9093/metrics
+
+open-service-graph:
+	open http://localhost:8088/force/forcegraph.html	
 
 ls:
 	kubectl get deployments -o wide
